@@ -20,11 +20,8 @@ path_saved = fullfile(parentdir,'DB','ProcessedDB');%,...
 load(fullfile(path_saved,'feat_set_combined_of_tless_prac_seg_60_using_ch4')); % load saved features
 Features=feat_set_combined; clear feat_set_combined;
 % 분류 감정 선택
-% idx_exp2use = 1 : 8 % 전체:"화남";"비웃음";"역겨움";"두려움";"행복";"무표정";"슬픔";"놀람"
-% idx_exp2use = [1,2,3,5,6,7,8]; % <두려움제거>
-idx_exp2use = [1,2,3,4,5,6,7]; %  <놀람 제거>
-% idx_exp2use = [1,2,3,5,7,8]; % <두려움 무표정 제거>
-
+idx_exp2use = [1,2,3,5,7,8]; %["화남";"비웃음";"역겨움";"두려움";"행복";"무표정";"슬픔";"놀람";
+idx_exp2use = 1 : 8
 names_exp(idx_exp2use) % 확인
 Features = Features(:,:,idx_exp2use,:,:);
 
@@ -123,7 +120,7 @@ for N_expatpair = 4  % choose numbe of feature pairs. % 참고: feature 4개 사용했
                         'T5_feat_set_combined_of_tless_prac_seg_60_using_ch4',...
                         ['T_',num2str(i_sub),'_',...
                         num2str(i_trl),'_',feat_name,'_5.mat']));
-                    T = T(:,idx_exp2use);
+%                     T(:,idx2reject) = [];
                     for i_FE = 1 : N_exp
                         for i_seg = 1 : N_seg
                             for i_comp = 1 : N_comp
