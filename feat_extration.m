@@ -1,10 +1,12 @@
-%----------------------------------------------------------------------
+%--------------------------------------------------------------------------
+% feat extracion code for practical facial expression
+%--------------------------------------------------------------------------
 % developed by Ho-Seung Cha, Ph.D Student,
 % CONE Lab, Biomedical Engineering Dept. Hanyang University
 % under supervison of Prof. Chang-Hwan Im
 % All rights are reserved to the author and the laboratory
 % contact: hoseungcha@gmail.com
-%---------------------------------------------------------------------
+%--------------------------------------------------------------------------
 
 clc; clear all; close all;
 parentdir=(fileparts(pwd));
@@ -126,7 +128,7 @@ for i_sub= 1:N_subject
         
         %% To confirm the informaion of trrigers were collected right
         hf =figure(i_sub);
-        hf.Position = [-1919 41 1920 962];
+        hf.Position = [ 1          41        1920         962];
         subplot(N_Trl,1,i_data);
         plot(temp_feat(:,17:20));
         hold on;
