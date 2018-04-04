@@ -208,12 +208,9 @@ end
 %% 결과 정리
 size(acc.lda)
 acc.lda = acc.lda(:,:,31:end,:);
-for N_comp = 1 : 2
-    for i_sub = 1 : 9
-        permute(mean(acc.lda(30,:,:,N_comp),2),[3 1 2])
-    end
-end
-
+% 피험자 및 사용한 유사 DB갯수로 정의
+result = permute(mean(acc.lda(30,:,:,:),2),[3 4 1 2]);
+bar(result)
 
 
 
