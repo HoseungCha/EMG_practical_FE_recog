@@ -11,18 +11,17 @@ clear; close all; clc
 parentdir=(fileparts(pwd));
 addpath(genpath(fullfile(parentdir,'functions')));
 % 실험 정보
-% Trg_Inform = {"화남 ",1,1;"비웃음",1,2;"역겨움",1,3;"두려움",1,4;"행복",1,5;"무표정",1,6;"슬픔",1,7;"놀람",2,1;"키스",2,2};
 names_exp = ["화남";"비웃음";"역겨움";"두려움";"행복";"무표정";"슬픔";"놀람"];
-
+N_pair = 1;
 % path_main= 'E:\OneDrive_Hanyang\연구\EMG_FE_recognition_emotion\코드'; % main path
 path_saved = fullfile(parentdir,'DB','ProcessedDB');%,...
 %     'len_win_0.1000_SP_win_0.1000'); % saving path
 load(fullfile(path_saved,'feat_set_combined_of_tless_prac_seg_60_using_ch4')); % load saved features
 Features=feat_set_combined; clear feat_set_combined;
 % 분류 감정 선택
-% idx_exp2use = 1 : 8 % 전체:"화남";"비웃음";"역겨움";"두려움";"행복";"무표정";"슬픔";"놀람"
+idx_exp2use = 1 : 8 % 전체:"화남";"비웃음";"역겨움";"두려움";"행복";"무표정";"슬픔";"놀람"
 % idx_exp2use = [1,2,3,5,6,7,8]; % <두려움제거>
-idx_exp2use = [1,2,3,4,5,6,7]; %  <놀람 제거>
+% idx_exp2use = [1,2,3,4,5,6,7]; %  <놀람 제거>
 % idx_exp2use = [1,2,3,5,7,8]; % <두려움 무표정 제거>
 
 names_exp(idx_exp2use) % 확인
@@ -36,6 +35,9 @@ idx_feat_CC = 1:16;
 idx_feat_RMS = 17:20;
 idx_feat_SampEN = 21:24;
 idx_feat_WL = 25:28;
+
+% get indices of trials
+Idx_trial = 1 : N_trl;
 
 % feature 별로 추출
 F.CC = Features(:,idx_feat_CC,:,:,:);
@@ -57,7 +59,7 @@ acc.svm = zeros(N_seg,N_trl,N_sub);
 acc.lda = zeros(N_seg,N_trl,N_sub);
 acc.knn = zeros(N_seg,N_trl,N_sub);
 
-N_comp = 1; N_Total_comp=0;
+N_comp = 1; N_Total_comp=1;
 for N_expatpair = 4  % choose numbe of feature pairs. % 참고: feature 4개 사용했을 때 결과 좋음
     idx_F = nchoosek(1:length(F_name),N_expatpair);
     
@@ -77,14 +79,8 @@ for N_expatpair = 4  % choose numbe of feature pairs. % 참고: feature 4개 사용했
         % train DB를 20가지중에 선택할 때, 랜덤하게 선택 총 반복횟수 정하기
         load('pairset_new.mat'); 
         
-        for n_pair = 1;
+        for n_pair = 1 : N_pair;
         pair = pairset_new{n_pair};
-        % get indices of trials
-        Idx_trial = 1 : N_trl;
-        
-        % IDX_comp = 10 : 10 : 100; IDX_comp = [1, IDX_comp];
-        % IDX_comp = 1 : 100;
-        % N_Total_comp = length(IDX_comp);
         
         % memory allocation for results
         pred.svm = cell(N_sub,N_trl,N_Total_comp+1);
@@ -96,15 +92,16 @@ for N_expatpair = 4  % choose numbe of feature pairs. % 참고: feature 4개 사용했
         fin_pred.knn = cell(N_sub,N_trl,N_Total_comp+1);
         pred_n_label = cell(N_sub,N_trl,N_Total_comp+1);
         
-%         for N_comp = 0 : N_Total_comp
-%         for N_comp = N_Total_comp
+        for N_comp = 0:N_Total_comp
 %         pred_n_label__=cell(N_sub,1);
 %         c_sub = 0;
         for i_sub = 31 : N_sub
+%         for i_sub = 31
 %         c_sub = c_sub
 %         fprintf('N_comp:%d i_sub: %d \n',N_comp,i_sub);
 %         pred_n_label_ = cell(N_trl,1);
         for i_trl = 1:N_trl
+%         for i_trl = 1
             % get train DB
             train = temp_feat(:,:,:,Idx_trial==pair(i_trl,n_pair),i_sub);
             % get permutation of dimesion of train DB
@@ -179,10 +176,12 @@ for N_expatpair = 4  % choose numbe of feature pairs. % 참고: feature 4개 사용했
 %                     /((N_trl-n_pair)*N_exp)*100;
             end
         end
-        figure(n_pair);plot(permute(mean(mean(acc.lda(:,:,31:i_sub,1:(N_comp+1)),3),2),[1 4 2 3]));drawnow;
+%         figure(n_pair);plot(permute(mean(mean(acc.lda(:,:,31:i_sub,1:(N_comp+1)),3),2),[1 4 2 3]));drawnow;
+        end
         end
         
-        n_seg = 30;
+        % plot and analyze of confusion matrix
+%         n_seg = 30;
 %         for i_sub = 1 : N_sub
 %             pred_n_label_vec = cat(1,pred_n_label{n_seg,:,i_sub});
 %             outputs = full(ind2vec(pred_n_label_vec(:,1)',N_exp));
@@ -191,67 +190,32 @@ for N_expatpair = 4  % choose numbe of feature pairs. % 참고: feature 4개 사용했
 %             figure(i_sub);
 %             plotConfMat(cm,  names_exp(idx_exp2use))
 %         end
-        
 %         for n_seg = 1:10:N_seg
-        pred_n_label_vec = cat(1,pred_n_label{n_seg,:,:});
-        outputs = full(ind2vec(pred_n_label_vec(:,1)',N_exp));
-        targets = full(ind2vec(pred_n_label_vec(:,2)',N_exp));
-%             plotconfusion(targets,outputs,names_word)
-        [c,cm,ind,per] = confusion(targets,outputs);
-        figure;
-        plotConfMat(cm, names_exp(idx_exp2use))
-        sp = cellfun(@(x) size(x,2),ind)
-        sp(logical(eye(size(sp)))) = 0;
-        FN_sum_of_each_class = sum(sp,1);
-
+%         pred_n_label_vec = cat(1,pred_n_label{n_seg,:,:});
+%         outputs = full(ind2vec(pred_n_label_vec(:,1)',N_exp));
+%         targets = full(ind2vec(pred_n_label_vec(:,2)',N_exp));
+% %             plotconfusion(targets,outputs,names_word)
+%         [c,cm,ind,per] = confusion(targets,outputs);
+%         figure;
+%         plotConfMat(cm, names_exp(idx_exp2use))
+%         sp = cellfun(@(x) size(x,2),ind)
+%         sp(logical(eye(size(sp)))) = 0;
+%         FN_sum_of_each_class = sum(sp,1);
 %         end
         end
-%         save(fullfile(cd,'result',[temp_str,'._FearR_mat']),'acc','pred','fin_pred');
+    end
+end
+%% 결과 정리
+size(acc.lda)
+acc.lda = acc.lda(:,:,31:end,:);
+for N_comp = 1 : 2
+    for i_sub = 1 : 9
+        permute(mean(acc.lda(30,:,:,N_comp),2),[3 1 2])
     end
 end
 
 
 
-% % train/test indexing
-% idx_rand = randperm(numel(feat_set));
-% idx_train = idx_rand(1: 63);
-% idx_test =  idx_rand(64: end);
-% 
-% % get train DB & label
-% feat_train = feat_set(idx_train);
-% feat_train = cell2mat(cat(1,feat_train{:}));
-% label = repmat((1: N_exp)',[63,N_seg])';
-% label = label(:);
-% 
-% %train LDA
-% model_LDA = fitcdiscr(feat_train, label);
-% 
-% %test LDA
-% feat_test = feat_set(idx_test);
-% for i = 1 : numel(feat_test)
-%     temp = feat_test{i};
-%     temp = cat(3,temp{:});
-% 
-%     [temp_pred,~,~] = predict(model_LDA, temp_f);
-%     [temp_pred,~,~] = svmpredict(temp_l,temp_f, model);
-%                 
-%     % final decision using majoriy voting
-%     for n_seg = 1 : N_Seg
-%         maxv = zeros(N_exp,N_trial-n_pair); final_predict = zeros(N_exp,N_trial-n_pair);
-%         for i = 1 : N_exp
-%             for j = 1 : N_trial-n_pair
-%                 [maxv(i,j),final_predict(i,j)] = max(countmember(1:N_exp,temp_pred(i,1:n_seg,j)));
-%             end
-%         end
-%         final_predict = final_predict(:);
-%         acc(i_sub,i_tral,n_seg) = sum(repmat((1:N_exp)',[N_trial-n_pair,1])==final_predict)/(N_exp*N_trial-N_exp*n_pair)*100;
-%     end
-%     
-% end
-% 
-% 
-% 
-% cellfun(@(x) size(x,1),feat_set);
-% cat(1,feat_set{:});
-% 
-% c
+
+
+
