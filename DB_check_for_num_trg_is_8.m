@@ -51,7 +51,8 @@ lc_matrix = [10,9;10,8;9,8]; %% ¿ÞÂÊ Àü±Ø Á¶ÇÕ
 %% °á°ú memory alloation
 Features = zeros(N_seg,N_feat,N_FaExp,N_trl,N_subject);
 % Features(:,:,event_s(i_emo,1),i_data,i_sub)
-for i_sub= 1:N_subject
+% for i_sub= 1:N_subject
+for i_sub= 12   
     
     sub_name = Sname{i_sub}(end-2:end);
 

@@ -74,16 +74,9 @@ for i_sub= 1:N_subject
         temp = reshape(temp(:,2),[2,size(temp,1)/2])';
         lat_trg = temp(:,1);
         [~,idx_in_order] = sortrows(Idx_trg_obtained);
-        % [idx_in_order,(1:N_FaExp)'], idices in order corresponding to
-        % emotion label
-        temp = sortrows([idx_in_order,(1:length(idx_in_order))'],1); 
+        % [idx_in_order,(1:N_FaExp)'], idices in order co
+        temp = sortrows([idx_in_order,(1:N_FaExp)'],1); 
         FE_sequence = temp(:,2); clear Idx_trg_obtained;
-        
-        % for data consistency, put in fake data
-        if size(FE_sequence,1) == 8
-            FE_sequence = [FE_sequence;9];
-            lat_trg = [lat_trg;0];
-        end
         
         %% get raw data and bipolar configuration
         raw_data = double(OUT.data');
@@ -136,7 +129,7 @@ for i_sub= 1:N_subject
         
         %% To confirm the informaion of trrigers were collected right
         hf =figure(i_sub);
-        hf.Position = [-2585 -1114 1920 1091];
+        hf.Position = [ 1          41        1920         962];
         subplot(N_Trl,1,i_data);
         plot(temp_feat(:,17:20));
         hold on;
@@ -146,10 +139,9 @@ for i_sub= 1:N_subject
 %         plot(temp_feat(:,1:6));
 %         hold on;
 %         stem(idx_TRG_Start,ones([N_FE,1]));
-%         drawnow;
+        drawnow;
         
        %% Get Feature sets(preprocessed DB)
-       
         for i_emo_orer_in_this_exp = 1 : N_FaExp
             Features(:,:,FE_sequence(i_emo_orer_in_this_exp),count_i_data,i_sub) = ...
                         temp_feat(idx_TRG_Start(i_emo_orer_in_this_exp):...
