@@ -8,7 +8,7 @@
 %--------------------------------------------------------------------------
 clc; close all; clear all;
 % get tool box
-addpath(genpath(fullfile('E:\Hanyang\¿¬±¸','_matlab_toolbox')));
+addpath(genpath(fullfile(fileparts(fileparts(fileparts(pwd))),'_matlab_toolbox')));
 parentdir=(fileparts(pwd));
 addpath(genpath(fullfile(parentdir,'functions')));
 

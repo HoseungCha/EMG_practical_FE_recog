@@ -8,8 +8,9 @@
 % contact: hoseungcha@gmail.com
 %---------------------------------------------------------------------
 clear; close all; clc
-parentdir=(fileparts(pwd));
-addpath(genpath(fullfile(parentdir,'functions')));
+addpath(genpath(fullfile(fileparts(fileparts(fileparts(pwd))),'_matlab_toolbox')));
+% parentdir=(fileparts(pwd));
+% addpath(genpath(fullfile(parentdir,'functions')));
 % 실험 정보
 names_exp = ["화남";"비웃음";"역겨움";"두려움";"행복";"무표정";"슬픔";"놀람"];
 N_pair = 1;
