@@ -6,8 +6,9 @@
 % contact: hoseungcha@gmail.com
 % 2017.09.13 DTW변환 100개 늘림(함수로 간략화시킴)
 %--------------------------------------------------------------------------
-
 clc; close all; clear all;
+% get tool box
+addpath(genpath(fullfile('E:\Hanyang\연구','_matlab_toolbox')));
 parentdir=(fileparts(pwd));
 addpath(genpath(fullfile(parentdir,'functions')));
 

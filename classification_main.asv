@@ -117,7 +117,8 @@ for N_expatpair = 4  % choose numbe of feature pairs. % 참고: feature 4개 사용했
                     d_similar{i_featp} = zeros(N_exp*N_seg,feat_size(i_featp));
                     labe_d{i_featp} = zeros(length(d_similar{i_featp}),1);
                     feat_name  = F_name{idx_F(i_feat,i_featp)};
-                    load(fullfile('E:\Hanyang\연구\EMG_TrainLess_Expression\코드\DB\dist\T5_feat_set_combined_of_tless_prac_seg_60_using_ch4',...
+                    load(fullfile('E:\OneDrive_Hanyang\연구\EMG_TrainLess_Expression\코드\DB\dist',...
+                        'T5_feat_set_combined_of_tless_prac_seg_60_using_ch4',...
                         ['T_',num2str(i_sub),'_',...
                         num2str(i_trl),'_',feat_name,'_5.mat']));
                     T = T(:,idx_exp2use);
@@ -219,7 +220,7 @@ acc.lda = acc.lda(:,:,31:end,:);
 % 피험자 및 사용한 유사 DB갯수로 정의
 result = permute(mean(acc.lda(30,:,:,:),2),[3 4 1 2]);
 bar(result)
-mean(result)
+
 
 
 

@@ -7,8 +7,9 @@
 % All rights are reserved to the author and the laboratory
 % contact: hoseungcha@gmail.com
 %--------------------------------------------------------------------------
-
 clc; clear all; close all;
+% get tool box
+addpath(genpath(fullfile('E:\Hanyang\연구','_matlab_toolbox')));
 path_parent=(fileparts(pwd));
 addpath(genpath(fullfile(path_parent,'functions')));
 %% 실험 정보
