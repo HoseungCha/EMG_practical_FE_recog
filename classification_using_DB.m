@@ -16,9 +16,8 @@ name_feat_file = 'feat_set_seg_30';
 load(fullfile(parentdir,'DB','ProcessedDB',name_feat_file));
 
 %% DB set 가져오기
-path_DB = 'E:\Hanyang\연구\EMG_TrainLess_Expression\코드\DB\ProcessedDB';
 name_DB_file = 'feat_set_combined_seg_30_using_ch4';
-load(fullfile(path_DB,name_DB_file));
+load(fullfile(parentdir,'DB','DB_processed_from_trainless',name_DB_file));
 Features_DB = feat_set_combined; clear feat_set_combined;
 %% 실험 정보
 [N_Seg, N_Feat, N_FE, N_trial, N_sub , N_emgpair] = size(Features); % DB to be analyzed
@@ -122,6 +121,13 @@ for i_sub = 1 : N_sub
     end
 end
 R_Total{i_emg_pair} = R;
+end
+
+%% plot
+for i_emg_pair = 1 : 3
+    tmp = R_Total{i_emg_pair};
+    tmp = permute(mean(mean(tmp.acc,2),3),[1 4 2 3]);
+    plot(tmp)
 end
 % save at directory of DB\dist
 %             save(fullfile(path_made,['T_',num2str(i_sub),'_',...
